@@ -7,15 +7,23 @@ errors = dict()
 
 
 def main():
-    # checks for errors
+    # checks
     for entry in bus_lines:
         for k, v in entry.items():
-            # validating type
+            # validating Type + allowed values
             try:
                 fv.validate_required(k, v)
                 fv.validate_type(k, type(v))
                 fv.validate_value_allowed(k, v)
             except (fv.DataRequiredMissing, fv.DataTypeMismatchError, fv.DataValueNotAllowed):
+                errors['total'] = errors.get('total', 0) + 1
+                errors[k] = errors.get(k, 0) + 1
+
+            # validating Format
+            try:
+                if k == 'stop_name':
+                    fv.validate_stop_names(k, v)
+            except fv.StopNameError:
                 errors['total'] = errors.get('total', 0) + 1
                 errors[k] = errors.get(k, 0) + 1
 
