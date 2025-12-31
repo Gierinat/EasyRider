@@ -23,7 +23,9 @@ def main():
             try:
                 if k == 'stop_name':
                     fv.validate_stop_names(k, v)
-            except fv.StopNameError:
+                if k == 'a_time':
+                    fv.validate_time(k, v)
+            except (fv.StopNameError, fv.TimeFormatError):
                 errors['total'] = errors.get('total', 0) + 1
                 errors[k] = errors.get(k, 0) + 1
 

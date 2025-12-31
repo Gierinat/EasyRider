@@ -10,12 +10,22 @@ fields_structure = {'bus_id': {'type': int, 'required': True},
 
 def validate_stop_names(field, value):
     capital_letter_start = str(value)[0].isupper() if value else False
-    suffix = re.search(r'\w*\b$', str(value))
+    suffix = re.search(r'(?<=\w )\w*\b$', str(value))
     suffix = suffix.group() if suffix else None
     allowed_suffixes = fields_structure[field].get('suffixes', None)
-    print(suffix, allowed_suffixes)
     if (suffix not in allowed_suffixes) or not capital_letter_start:
         raise StopNameError
+
+
+def validate_time(field, value):
+    pattern = re.match(r'(\d\d):(\d\d)', value)
+    if pattern:
+        hours = pattern.groups()[0]
+        minutes = pattern.groups()[-1]
+        if int(hours) > 23 or int(minutes) > 59:
+            raise TimeFormatError
+    else:
+        raise TimeFormatError
 
 
 def validate_type(field, field_type):
@@ -48,4 +58,7 @@ class DataTypeMismatchError(Exception):
     pass
 
 class StopNameError(Exception):
+    pass
+
+class TimeFormatError(Exception):
     pass
