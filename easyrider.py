@@ -29,11 +29,23 @@ def main():
                 errors['total'] = errors.get('total', 0) + 1
                 errors[k] = errors.get(k, 0) + 1
 
+    # gathering stats
+    buses = dict()
+    for entry in bus_lines:
+        for k, v in entry.items():
+            if k == 'bus_id':
+                buses[v] = buses.get(v, 0) + 1
+
+
     # presenting outcomes
     print(f"Type and required field validation: {errors.get('total', 0)} errors")
     for k in fv.fields_structure:
         error = errors.get(k, 0)
         print(k, ": ", error, sep="")
+
+    print("\nLine names and number of stops:")
+    for k, v in buses.items():
+        print("bus_id: ", k, " stops: ", v, sep="")
 
 
 if __name__ == "__main__":
