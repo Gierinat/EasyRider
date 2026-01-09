@@ -32,9 +32,8 @@ def main():
     # gathering stats
     buses = dict()
     for entry in bus_lines:
-        for k, v in entry.items():
-            if k == 'bus_id':
-                buses[v] = buses.get(v, 0) + 1
+        bus_id = entry["bus_id"]
+        buses.setdefault(bus_id, []).append({k: v for k, v in entry.items() if k != "bus_id"})
 
 
     # presenting outcomes
@@ -45,7 +44,7 @@ def main():
 
     print("\nLine names and number of stops:")
     for k, v in buses.items():
-        print("bus_id: ", k, " stops: ", v, sep="")
+        print("bus_id: ", k, " stops: ", len(v), sep="")
 
 
 if __name__ == "__main__":
